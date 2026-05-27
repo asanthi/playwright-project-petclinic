@@ -1,11 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
+import 'dotenv/config';
 
 require('dotenv').config();
 
 export default defineConfig({
   fullyParallel: false,
   retries: 0,
-  workers: 1,
+  workers: 3,
   reporter: 'html',
   globalSetup: '.auth/auth-setup.ts',
   timeout: 90000,
