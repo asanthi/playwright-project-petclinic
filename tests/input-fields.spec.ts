@@ -1,75 +1,48 @@
 import { test, expect } from '@playwright/test'
-import { PageManager } from '../page-objects/pageManager'
 
 test.beforeEach(async ({ page }) => {
     await page.goto('/')
+    await page.getByText('Pet Types').click()
+    await expect(page.locator('h2')).toHaveText('Pet Types')
 })
 
-test.only('Update pet type', async ({ page }) => {
-
-    const pm = new PageManager(page)
-    await pm.navigateTo().goToPetTypesPage()
-
-    //Assert heading and availability of pet list
-    await expect(page.getByRole('heading', { name: 'Pet Types' })).toBeVisible()
-    await expect(page.locator('#pettypes')).toBeVisible()
-
-    //Initiate pet type update from 'cat' to 'rabbit' , perform the update and assert
-    await pm.returnPetTypesPage().initiateEditPetType('cat')
-    await expect(page.getByRole('heading', { name: 'Edit Pet Type' })).toBeVisible()
-    await pm.returnEditPetTypePage().editPetType('rabbit')
-    await pm.returnEditPetTypePage().savePetTypeUpdate()
-    await expect(page.getByRole('heading', { name: 'Pet Types' })).toBeVisible()
-    await expect(page.locator('#pettypes input[name="pettype_name"]').first()).toHaveValue('rabbit')
-
-    //Initiate pet type update from 'rabbit' to 'cat' , perform the update and assert
-    await pm.returnPetTypesPage().initiateEditPetType('rabbit')
-    await pm.returnEditPetTypePage().editPetType('cat')
-    await pm.returnEditPetTypePage().savePetTypeUpdate()
-    await expect(page.locator('#pettypes input[name="pettype_name"]').first()).toHaveValue('cat')
-
+test('Update pet type', async ({ page }) => {
+    await page.getByRole('row', { name: 'cat' }).getByRole('button', { name: 'Edit' }).click()
+    await expect(page.locator('h2')).toHaveText('Edit Pet Type')
+    const petInput = page.locator('#name')
+    await petInput.click()
+    await petInput.press('Meta+A')
+    await petInput.fill("rabbit")
+    await page.getByRole('button', { name: 'Update' }).click()
+    await expect(page.locator('#pettypes input[name="pettype_name"]').first()).toHaveValue('rabbit', { timeout: 10000 })
+    await page.getByRole('row', { name: 'rabbit' }).getByRole('button', { name: 'Edit' }).click()
+    await petInput.click()
+    await petInput.press('Meta+A')
+    await petInput.fill("cat")
+    await page.getByRole('button', { name: 'Update' }).click()
+    await expect(page.locator('#pettypes input[name="pettype_name"]').first()).toHaveValue('cat', { timeout: 10000 })
 })
-
 
 test('Cancel pet type update', async ({ page }) => {
-
-    const pm = new PageManager(page)
-    await pm.navigateTo().goToPetTypesPage()
-
-    //Assert heading and availability of pet list
-    await expect(page.getByRole('heading', { name: 'Pet Types' })).toBeVisible()
-    await expect(page.locator('#pettypes')).toBeVisible()
-
-    //Initiate pet type update from 'dog' to 'moose' , cancel the update and assert
-    await pm.returnPetTypesPage().initiateEditPetType('dog')
-    await pm.returnEditPetTypePage().editPetType('moose')
+    await page.getByRole('row', { name: 'dog' }).getByRole('button', { name: 'Edit' }).click()
+    const petInput = page.locator('#name')
+    await petInput.click()
+    await petInput.press('Meta+A')
+    await petInput.fill("moose")
     await expect(page.locator('#name')).toHaveValue('moose')
-    await pm.returnEditPetTypePage().cancelPetTypeUpdate()
+    await page.getByRole('button', { name: 'Cancel' }).click()
     await expect(page.getByRole('row', { name: "dog" })).toBeVisible()
-
 })
 
 test('Validation of Pet type name is required', async ({ page }) => {
-
-    const pm = new PageManager(page)
-    await pm.navigateTo().goToPetTypesPage()
-
-    //Assert heading and availability of pet list
-    await expect(page.getByRole('heading', { name: 'Pet Types' })).toBeVisible()
-    await expect(page.locator('#pettypes')).toBeVisible()
-
-    //Initiate pet type update from 'lizard' to empty pet type and attempt  to save 
-    await pm.returnPetTypesPage().initiateEditPetType('lizard')
-    await pm.returnEditPetTypePage().updateWithoutPetType()
+    await page.getByRole('row', { name: 'lizard' }).getByRole('button', { name: 'Edit' }).click()
+    const petInput = page.locator('#name')
+    await petInput.click()
+    await petInput.press('Meta+A')
+    await petInput.press('Backspace')
     await expect(page.getByText('Name is required')).toBeVisible()
-    await pm.returnEditPetTypePage().savePetTypeUpdate()
-    await expect(page.getByRole('heading', { name: 'Edit Pet Type' })).toBeVisible()
-
-    //Cancel
-    await pm.returnEditPetTypePage().cancelPetTypeUpdate()
-    await expect(page.getByRole('heading', { name: 'Pet Types' })).toBeVisible()
-
+    await page.getByRole('button', { name: 'Update' }).click()
+    await expect(page.locator('h2')).toHaveText('Edit Pet Type')
+    await page.getByRole('button', { name: 'Cancel' }).click()
+    await expect(page.locator('h2')).toHaveText('Pet Types')
 })
-
-
-
