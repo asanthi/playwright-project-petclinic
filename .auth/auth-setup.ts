@@ -1,4 +1,5 @@
 import { chromium, type FullConfig } from '@playwright/test';
+import 'dotenv/config';
 
 const fs = require('fs').promises;
 const filePath = '.auth/user.json';
