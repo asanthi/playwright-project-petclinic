@@ -26,7 +26,7 @@ test('Cancel pet type update', async ({ page }) => {
     const petTypeInputField = page.locator('#name')
     await expect(petTypeInputField).toHaveValue('dog')
     await petTypeInputField.fill('moose')
-    await expect(page.locator('#name')).toHaveValue('moose')
+    await expect(petTypeInputField).toHaveValue('moose')
     await page.getByRole('button', { name: 'Cancel' }).click()
     await expect(page.getByRole('row', { name: "dog" })).toBeVisible()
 })
