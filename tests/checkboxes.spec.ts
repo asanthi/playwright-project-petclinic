@@ -26,7 +26,6 @@ test('Validate selected specialities', async ({ page }) => {
     await expect(specialtyDropdown).toHaveText('surgery')
     await dentistryCheckBox.check()
     await expect(specialtyDropdown).toHaveText('surgery, dentistry')
-
 })
 
 test('Select all specialties', async ({ page }) => {
@@ -37,17 +36,17 @@ test('Select all specialties', async ({ page }) => {
     await expect(specialtyDropdown).toHaveText('surgery')
     await specialtyDropdown.click()
 
-    const specilaltyCheckboxes = await page.getByRole('checkbox').all();
+    const specialtyCheckboxes = await page.getByRole('checkbox').all()
+    const specialtyNameLabel = await page.locator('.dropdown-content label').allTextContents()
 
-    for (const checkbox of specilaltyCheckboxes) {
-        await checkbox.check();
+    for (const checkbox of specialtyCheckboxes) {
+        await checkbox.check()
         await expect(checkbox).toBeChecked()
-        const specialtyName = await checkbox.getAttribute('id');
-        await expect(specialtyDropdown).toContainText(specialtyName!)
+    }
+    for (const label of specialtyNameLabel) {
+       await expect(specialtyDropdown).toContainText(label)
     }
 })
-
-
 
 test('Unselect all specialties', async ({ page }) => {
 
@@ -57,8 +56,8 @@ test('Unselect all specialties', async ({ page }) => {
     await expect(specialtyDropdown).toHaveText('dentistry, surgery')
     await specialtyDropdown.click()
 
-    const specilaltyCheckboxes = await page.getByRole('checkbox').all();
-    for (const checkbox of specilaltyCheckboxes) {
+    const specialtyCheckboxes = await page.getByRole('checkbox').all()
+    for (const checkbox of specialtyCheckboxes) {
         await checkbox.uncheck();
         await expect(checkbox).not.toBeChecked()
     }
