@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
 test('Validate selected pet types from the list', async ({ page }) => {
     await page.getByText('George Franklin').click()
     await expect(page.getByRole('row', { name: 'Name George Franklin' })).toBeVisible()
-    const petLeo = page.locator('app-pet-list').filter({ has: page.getByText('Leo') })
+    const petLeo = page.locator('app-pet-list',{ hasText: 'Leo' })
     await petLeo.getByRole('button', { name: 'Edit Pet' }).click()
 
     await expect(page.getByRole('heading')).toHaveText('Pet')
@@ -32,9 +32,8 @@ test('Validate selected pet types from the list', async ({ page }) => {
 test('Validate the pet type update', async ({ page }) => {
 
     await page.getByText('Eduardo Rodriquez').click()
-    const petRosy = page.locator('app-pet-list').filter({ has: page.getByText('Rosy') })
-    const editPetButtonForRosy = petRosy.getByRole('button', { name: 'Edit Pet' })
-    await editPetButtonForRosy.click()
+    const petRosy = page.locator('app-pet-list',{ hasText: 'Rosy'})
+    await petRosy.getByRole('button', { name: 'Edit Pet' }).click()
     await expect(page.getByText('Name', { exact: true })).toBeVisible()
     await expect(page.locator('#name')).toHaveValue('Rosy')
     await expect(page.getByText('Type', { exact: true })).toBeVisible()
@@ -46,16 +45,15 @@ test('Validate the pet type update', async ({ page }) => {
     await petTypeDropDown.selectOption('bird')
     await expect(petTypeDropDown).toHaveValue('bird')
     await expect(petTypeInput).toHaveValue('bird')
-
-    const updatePetButton = page.getByRole('button', { name: 'Update Pet' })
-    await updatePetButton.click()
-    await expect(petRosy.getByText('bird')).toBeVisible()
+    
+    await page.getByRole('button', { name: 'Update Pet' }).click()
+    await expect(petRosy.locator('dd').nth(2)).toHaveText('bird')
 
     //Revert pet type change
-    await editPetButtonForRosy.click()
+    await petRosy.getByRole('button', { name: 'Edit Pet' }).click()
     await petTypeDropDown.selectOption('dog')
     await expect(petTypeDropDown).toHaveValue('dog')
     await expect(petTypeInput).toHaveValue('dog')
-    await updatePetButton.click()
-    await expect(petRosy.getByText('dog')).toBeVisible()
+    await page.getByRole('button', { name: 'Update Pet' }).click()
+    await expect(petRosy.locator('dd').nth(2)).toHaveText('dog')
 })
