@@ -16,8 +16,8 @@ await page.locator('#pettype').getByRole('textbox').fill('pig')
 await page.getByRole('button', {name:'Save'}).click()
 
 //Assert availablity of 'pig'
-const lastRow = page.locator('#pettypes tbody tr').last()
-await expect(lastRow.locator('input[name="pettype_name"]')).toHaveValue('pig')
+const lastRow = page.locator('tbody tr').last()
+await expect(lastRow.locator('input')).toHaveValue('pig')
 
 //Delete 'pig'
 page.once('dialog',dialog => {
@@ -26,6 +26,8 @@ page.once('dialog',dialog => {
 })
 
 await lastRow.getByRole('button', {name: 'Delete'}).click()
-await expect(lastRow.locator('input[name="pettype_name"]')).not.toHaveValue('pig')
+
+await page.waitForResponse('**/pettypes/*')
+await expect(lastRow.locator('input')).not.toHaveValue('pig')
 
 })
