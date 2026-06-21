@@ -148,8 +148,3 @@ test('Validate specialty lists', async ({ page }) => {
     await expect(page.getByRole('row', { name: 'Sharon Jenkins' }).getByText('oncology')).not.toBeVisible()
 
 })
-
-
-
-
-
