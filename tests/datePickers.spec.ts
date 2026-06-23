@@ -39,7 +39,7 @@ test('Select the desired date in calendar', async ({ page }) => {
 
 })
 
-test.only('Select the dates of visits and validate dates order', async ({ page }) => {
+test('Select the dates of visits and validate dates order', async ({ page }) => {
 
     await page.getByRole('row', { name: "Jean Coleman" }).getByRole('link').click()
     const samanthaPetSection = page.locator('app-pet-list', { hasText: 'Samantha' })
