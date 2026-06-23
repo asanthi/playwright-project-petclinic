@@ -51,12 +51,11 @@ test('Select the dates of visits and validate dates order', async ({ page }) => 
     await page.getByRole('button', { name: "Open calendar" }).click()
 
     const todaysDateObject = new Date()
-
-    const today = todaysDateObject.getDate().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false, })
-    const month = (todaysDateObject.getMonth() + 1).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false, })
-    const year = todaysDateObject.getFullYear().toString()
-    await page.getByRole('gridcell', { name: String(today) }).click()
-    const todaysDateString = `${year}/${month}/${today}`
+    const todayDay = todaysDateObject.toLocaleString('En-US', {day: '2-digit'})
+    const todayMonth = todaysDateObject.toLocaleString('En-US', {month : '2-digit'})
+    const todayYear = todaysDateObject.getFullYear().toString()
+    await page.getByRole('gridcell', { name: String(todayDay) }).click()
+    const todaysDateString = `${todayYear}/${todayMonth}/${todayDay}`
     await expect(page.locator('input[name="date"]')).toHaveValue(todaysDateString)
 
     await page.locator('input[name="description"]').fill('dermatologists visit')
@@ -69,11 +68,10 @@ test('Select the dates of visits and validate dates order', async ({ page }) => 
     await samanthaPetSection.getByRole('button', { name: "Add Visit" }).click()
     await page.getByRole('button', { name: "Open calendar" }).click()
 
-    const pastVisitDateObject = new Date()
-    pastVisitDateObject.setDate(pastVisitDateObject.getDate() - 45)
-    const pastVisitDay = (pastVisitDateObject.getDate()).toString()
-    const pastVisitMonthShort = pastVisitDateObject.toLocaleString('en-US', { month: 'short' }).toUpperCase()
-    const pastVisitYear = pastVisitDateObject.getFullYear().toString()
+    todaysDateObject.setDate(todaysDateObject.getDate() - 45)
+    const pastVisitDay = (todaysDateObject.getDate()).toString()
+    const pastVisitMonthShort = todaysDateObject.toLocaleString('en-US', { month: 'short' }).toUpperCase()
+    const pastVisitYear = todaysDateObject.getFullYear().toString()
     await page.getByRole('button', { name: 'Choose month and year' }).click()
     await page.getByText(pastVisitYear, { exact: true }).click()
     await page.getByText(pastVisitMonthShort, { exact: true }).click()
