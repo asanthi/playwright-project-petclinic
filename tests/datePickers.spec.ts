@@ -39,38 +39,41 @@ test('Select the desired date in calendar', async ({ page }) => {
 
 })
 
-test('Select the dates of visits and validate dates order', async ({ page }) => {
+test.only('Select the dates of visits and validate dates order', async ({ page }) => {
 
     await page.getByRole('row', { name: "Jean Coleman" }).getByRole('link').click()
-    const infoOfPetSamantha = page.locator('app-pet-list', { hasText: 'Samantha' })
-    await infoOfPetSamantha.getByRole('button', { name: "Add Visit" }).click()
+    const samanthaPetSection = page.locator('app-pet-list', { hasText: 'Samantha' })
+    await samanthaPetSection.getByRole('button', { name: "Add Visit" }).click()
     // Add visit
     await expect(page.getByRole('heading')).toHaveText('New Visit')
     await expect(page.getByRole('row').locator('td').nth(0)).toHaveText('Samantha')
     await expect(page.getByRole('row').locator('td').nth(3)).toHaveText('Jean Coleman')
     await page.getByRole('button', { name: "Open calendar" }).click()
 
-    const today = new Date().getDate()
-    await page.getByRole('gridcell', { name: String(today) }).click()
-    const todaysDateString = `${new Date().getFullYear()}/${String(new Date().getMonth() + 1).padStart(2, '0')}/${String(new Date().getDate()).padStart(2, '0')}`
-    await expect(page.locator('input[name="date"]')).toHaveValue(todaysDateString)
+    const todaysDateObject = new Date()
 
+    const today = todaysDateObject.getDate().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false, })
+    const month = (todaysDateObject.getMonth() + 1).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false, })
+    const year = todaysDateObject.getFullYear().toString()
+    await page.getByRole('gridcell', { name: String(today) }).click()
+    const todaysDateString = `${year}/${month}/${today}`
+    await expect(page.locator('input[name="date"]')).toHaveValue(todaysDateString)
 
     await page.locator('input[name="description"]').fill('dermatologists visit')
     await page.getByRole('button', { name: "Add Visit" }).click()
 
-    const visitsOfSamantha = infoOfPetSamantha.locator('app-visit-list')
+    const visitsOfSamantha = samanthaPetSection.locator('app-visit-list')
     await expect(visitsOfSamantha.locator('tr').nth(1).locator('td').first()).toHaveText(/^\d{4}-\d{2}-\d{2}$/)
 
     //Add another visit                                                
-    await infoOfPetSamantha.getByRole('button', { name: "Add Visit" }).click()
+    await samanthaPetSection.getByRole('button', { name: "Add Visit" }).click()
     await page.getByRole('button', { name: "Open calendar" }).click()
 
-    const date = new Date()
-    date.setDate(today - 45)
-    const pastVisitDay = String(date.getDate())
-    const pastVisitMonthShort = date.toLocaleString('en-US', { month: 'short' }).toUpperCase()
-    const pastVisitYear = date.getFullYear().toString()
+    const pastVisitDateObject = new Date()
+    pastVisitDateObject.setDate(pastVisitDateObject.getDate() - 45)
+    const pastVisitDay = (pastVisitDateObject.getDate()).toString()
+    const pastVisitMonthShort = pastVisitDateObject.toLocaleString('en-US', { month: 'short' }).toUpperCase()
+    const pastVisitYear = pastVisitDateObject.getFullYear().toString()
     await page.getByRole('button', { name: 'Choose month and year' }).click()
     await page.getByText(pastVisitYear, { exact: true }).click()
     await page.getByText(pastVisitMonthShort, { exact: true }).click()
@@ -80,10 +83,10 @@ test('Select the dates of visits and validate dates order', async ({ page }) => 
 
     //Ensure visit date chronological order
     const recenetVisitDateText = await visitsOfSamantha.locator('tr').nth(1).locator('td').first().innerText()
-    const pastVisitDateTextt = await visitsOfSamantha.locator('tr').nth(2).locator('td').first().innerText()
+    const pastVisitDateText = await visitsOfSamantha.locator('tr').nth(2).locator('td').first().innerText()
 
     const recentVisitDate = new Date(recenetVisitDateText)
-    const pastVisitDate = new Date(pastVisitDateTextt)
+    const pastVisitDate = new Date(pastVisitDateText)
 
     expect(pastVisitDate < recentVisitDate).toBeTruthy()
 
