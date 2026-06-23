@@ -317,7 +317,7 @@ test.beforeEach(async ({ page }) => {
     })
 })
 
-test('Validate owners list and visit list count', async ({ page }) => {
+test('Mocking API request', async ({ page }) => {
 
     //owners page
     await page.goto('/')
