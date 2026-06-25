@@ -1,0 +1,100 @@
+{
+            "firstName": "Khiana",
+            "lastName": "Jayasoma",
+            "address": "115 Main St.",
+            "city": "Everette",
+            "telephone": "899499399",
+            "id": 1123,
+            "pets": [
+                {
+                    "name": "Fluffy",
+                    "birthDate": "2002-10-11",
+                    "type": {
+                        "name": "dog",
+                        "id": 3068
+                    },
+                    "id": 3333,
+                    "ownerId": 1123,
+                    "visits": [
+                        {
+                            "date": "2026-06-12",
+                            "description": "vaccine  for fluffy  1",
+                            "id": 6271,
+                            "petId": null
+                        },
+                        {
+                            "date": "2025-09-13",
+                            "description": "vaccine for fluffy 2",
+                            "id": 6271,
+                            "petId": null
+                        },
+                        {
+                            "date": "2024-08-14",
+                            "description": "vaccine for fluffy 3",
+                            "id": 6271,
+                            "petId": null
+                        },
+                        {
+                            "date": "2023-07-15",
+                            "description": "vaccine for fluffy 4",
+                            "id": 6271,
+                            "petId": null
+                        },
+                        {
+                            "date": "2022-06-16",
+                            "description": "vaccine for fluffy 5",
+                            "id": 6271,
+                            "petId": null
+                        },
+                        {
+                            "date": "2021-05-12",
+                            "description": "vaccine for fluffy 6",
+                            "id": 6271,
+                            "petId": null
+                        },
+                        {
+                            "date": "2020-04-17",
+                            "description": "vaccine for fluffy 7",
+                            "id": 6271,
+                            "petId": null
+                        },
+                        {
+                            "date": "2019-03-18",
+                            "description": "vaccine for fluffy 8",
+                            "id": 6271,
+                            "petId": null
+                        },
+                        {
+                            "date": "2018-02-19",
+                            "description": "vaccine for fluffy 9",
+                            "id": 6271,
+                            "petId": null
+                        },
+                        {
+                            "date": "2017-01-20",
+                            "description": "vaccine for fluffy 10",
+                            "id": 6271,
+                            "petId": null
+                        }
+                    ]
+                },
+                {
+                    "name": "Frisky",
+                    "birthDate": "2010-14-21",
+                    "type": {
+                        "name": "hamster",
+                        "id": 3072
+                    },
+                    "id": 3334,
+                    "ownerId": 1123,
+                    "visits": [
+                        {
+                            "date": "2026-01-11",
+                            "description": "vaccine for frisky 1",
+                            "id": 6288,
+                            "petId": null
+                        }
+                    ]
+                }
+            ]
+        }
