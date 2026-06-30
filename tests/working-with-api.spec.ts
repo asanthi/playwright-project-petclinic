@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 import owners from '../test-data/owners.json'
-import owner1 from '../test-data/owner1.json'
+import modifiedVets from '../test-data/modifiedVets.json'
 
 test.beforeEach(async ({ page }) => {
 
@@ -11,7 +11,12 @@ test.beforeEach(async ({ page }) => {
     })
     await page.route('*/**/api/owners/1123', async route => {
         await route.fulfill({
-            body: JSON.stringify(owner1)
+            body: JSON.stringify(owners[0])
+        })
+    })
+     await page.route('*/**/api/vets', async route => {
+        await route.fulfill({
+            body: JSON.stringify(modifiedVets)
         })
     })
 })
