@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test'
 import owners from '../test-data/owners.json'
-import modifiedVets from '../test-data/modifiedVets.json'
 
 test.beforeEach(async ({ page }) => {
 
@@ -14,11 +13,7 @@ test.beforeEach(async ({ page }) => {
             body: JSON.stringify(owners[0])
         })
     })
-     await page.route('*/**/api/vets', async route => {
-        await route.fulfill({
-            body: JSON.stringify(modifiedVets)
-        })
-    })
+
 })
 
 test('Mocking API request', async ({ page }) => {
@@ -53,3 +48,5 @@ test('Mocking API request', async ({ page }) => {
     await expect(ownerPetLocator.nth(1)).toContainText(ownerPets[1])
     await expect(ownerPetLocator.first().locator('app-visit-list td:first-child')).toHaveCount(10)
 })
+
+
