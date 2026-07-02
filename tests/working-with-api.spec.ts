@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import owners from '../test-data/owners.json'
+import sharonSpecialties from '../test-data/sharonSpecialties.json'
 
 test.beforeEach(async ({ page }) => {
 
@@ -14,6 +15,15 @@ test.beforeEach(async ({ page }) => {
         })
     })
 
+    await page.route('*/**/api/vets', async route => {
+        const response = await route.fetch()
+        const vets: any[] = await response.json()
+        const sharon = vets.find(vet => vet.firstName == "Sharon" && vet.lastName == "Jenkins")
+        sharon.specialties = sharonSpecialties
+        await route.fulfill({
+            json: vets
+        })
+    })
 })
 
 test('Mocking API request', async ({ page }) => {
@@ -49,4 +59,15 @@ test('Mocking API request', async ({ page }) => {
     await expect(ownerPetLocator.first().locator('app-visit-list td:first-child')).toHaveCount(10)
 })
 
+test('Intercept API response', async ({ page }) => {
+
+    await page.goto('/')
+    await page.getByText('Veterinarians').click()
+    await page.getByText('All').click()
+
+    for (const specialty of sharonSpecialties) {
+        await expect(page.getByRole('row', { name: 'Sharon Jenkins' })).toContainText(specialty.name)
+    }
+
+})
 
