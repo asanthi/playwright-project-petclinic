@@ -18,16 +18,13 @@ test.beforeEach(async ({ page }) => {
     await page.route('*/**/api/vets', async route => {
         const response = await route.fetch()
         const vets: any[] = await response.json()
-        const sharon = vets.find(vet => vet.id === 3493)
-        if (sharon) {
-            sharon.specialties = sharonSpecialties
-        }
+        const sharon = vets.find(vet => vet.firstName == "Sharon" && vet.lastName == "Jenkins")
+        sharon.specialties = sharonSpecialties
         await route.fulfill({
-            response, json: vets
+            json: vets
         })
     })
 })
-
 
 test('Mocking API request', async ({ page }) => {
 
