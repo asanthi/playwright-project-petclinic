@@ -3,6 +3,13 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "types": ["node", "@playwright/test"]
-  }
+    "types": [
+      "node",
+      "@playwright/test"
+    ]
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.json"
+  ]
 }
