@@ -8,19 +8,19 @@ test('Test with fixtures', async ({ page, ownerPetVisitData }) => {
     await page.getByText('Search').click()
     await page.getByRole('row', { name: ownerPetVisitData.ownerName }).getByRole('link').click()
 
-    const ownerPetLocator = page.locator('app-pet-list').filter({ hasText: ownerPetVisitData.petName })
-    const petVisitLocator = ownerPetLocator.locator('app-visit-list').locator('tr').nth(1)
+    const petInfoTableLocator = page.locator('app-pet-list').filter({ hasText: ownerPetVisitData.petName })
+    const petVisitRowLocator = petInfoTableLocator.locator('app-visit-list').locator('tr').nth(1)
 
     //Delete visit
-    await petVisitLocator.getByRole('button', { name: 'Delete Visit' }).click()
+    await petVisitRowLocator.getByRole('button', { name: 'Delete Visit' }).click()
 
     //Assert visit deletion
-    await expect(petVisitLocator.getByRole('row')).toHaveCount(0)
+    await expect(petVisitRowLocator.getByRole('row')).toHaveCount(0)
     
     //Delete pet
-     await ownerPetLocator.getByRole('button', { name: 'Delete Pet' }).click()
+     await petInfoTableLocator.getByRole('button', { name: 'Delete Pet' }).click()
 
      //Assert visit deletion
-    await expect(ownerPetLocator.getByRole('row')).toHaveCount(0)
+    await expect(petInfoTableLocator.getByRole('row')).toHaveCount(0)
     
 }) 

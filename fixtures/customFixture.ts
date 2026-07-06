@@ -1,5 +1,4 @@
 import { test as base, expect, APIRequestContext } from '@playwright/test'
-import owner from '../test-data/owner.json'
 
 type OwnerPetVisit = {
     ownerPetVisitData: {
@@ -13,17 +12,30 @@ export const test = base.extend<OwnerPetVisit>({
     ownerPetVisitData: async (
         { request }: { request: APIRequestContext },
         use: (data: OwnerPetVisit['ownerPetVisitData']) => Promise<void>) => {
-            
+
         const baseApiUrl = 'https://petclinic-api.bondaracademy.com/petclinic/api'
 
         //Api request to create a new owner
-        const ownerResponse = await request.post(`${baseApiUrl}/owners`,{
-            data: owner
+        const ownerResponse = await request.post(`${baseApiUrl}/owners`, {
+            data: {
+                "id": null,
+                "firstName": "Yuvin",
+                "lastName": "Jayasoma",
+                "address": "123 Main Ave",
+                "city": "Silver Lake",
+                "telephone": "123321123"
+            }
         })
         expect(ownerResponse.status()).toBe(201)
         const ownerResponseBody = await ownerResponse.json()
         const ownerId = ownerResponseBody.id
         const ownerName = ownerResponseBody.firstName + " " + ownerResponseBody.lastName
+
+        //Retrieve pet type ID for cat
+        const listPetTypesResponse = await request.get(`${baseApiUrl}/pettypes`)
+        const petTypeList: any[] = await listPetTypesResponse.json()
+        const petType = petTypeList.find(type => type.name == "cat")
+        const petTypeId = petType.id
 
         //Api request to create a new pet
         const petResponse = await request.post(`${baseApiUrl}/owners/${ownerId}/pets`,
@@ -44,7 +56,7 @@ export const test = base.extend<OwnerPetVisit>({
                     "pettype": "cat",
                     "type": {
                         "name": "cat",
-                        "id": 3067
+                        "id": petTypeId
                     }
                 }
             })
