@@ -1,0 +1,13 @@
+version: '3.8'
+services: 
+  playwright-project-petclinic:
+    image : playwright-project-petclinic
+    build:
+      context: .
+      dockerfile: ./Dockerfile  
+    command: npx playwright test 
+    volumes:
+      - ./playwright-report/:/app/playwright-report
+      - ./test-results/:/app/test-results
+
+
